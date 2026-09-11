@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MMA LIFE DYNASTY - Simulador de vida e carreira de lutadores de MMA">
+    <title>MMA LIFE DYNASTY</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <div id="loading-screen" class="loading-screen">
+            <div class="loading-content">
+                <h1>MMA LIFE DYNASTY</h1>
+                <p class="loading-text">Carregando mundo...</p>
+                <div class="loading-bar">
+                    <div class="loading-progress" id="loading-progress"></div>
+                </div>
+                <div id="loading-logs" class="loading-logs"></div>
+            </div>
+        </div>
+
+        <div id="error-screen" class="error-screen hidden">
+            <div class="error-content">
+                <h1>MMA LIFE DYNASTY</h1>
+                <p class="error-title">Não foi possível iniciar o jogo.</p>
+                <div class="error-details">
+                    <p id="error-message"></p>
+                    <p id="error-system"></p>
+                </div>
+                <button id="retry-button" class="btn btn-primary">TENTAR NOVAMENTE</button>
+            </div>
+        </div>
+
+        <div id="main-screen" class="main-screen hidden">
+            <!-- Menu Principal -->
+            <div id="main-menu" class="main-menu hidden">
+                <div class="menu-container">
+                    <h1>MMA LIFE DYNASTY</h1>
+                    <p class="tagline">CONSTRUA SUA HISTÓRIA</p>
+                    
+                    <div class="menu-buttons">
+                        <button id="new-game-btn" class="btn btn-primary">🥊 NOVO JOGO</button>
+                        <button id="continue-btn" class="btn btn-secondary hidden">▶️ CONTINUAR</button>
+                        <button id="settings-btn" class="btn btn-secondary">⚙️ CONFIGURAÇÕES</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Criação de Personagem -->
+            <div id="character-creation" class="character-creation hidden">
+                <div class="creation-container">
+                    <h2>CRIAR LUTADOR</h2>
+                    
+                    <div class="form-group">
+                        <label>Nome</label>
+                        <input type="text" id="player-name" placeholder="Seu nome" maxlength="50">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Apelido</label>
+                        <input type="text" id="player-nickname" placeholder="Seu apelido" maxlength="30">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nacionalidade</label>
+                        <select id="player-nationality">
+                            <option value="">Selecione...</option>
+                            <option value="BR">🇧🇷 Brasil</option>
+                            <option value="US">🇺🇸 Estados Unidos</option>
+                            <option value="MX">🇲🇽 México</option>
+                            <option value="RU">🇷🇺 Rússia</option>
+                            <option value="CN">🇨🇳 China</option>
+                            <option value="JP">🇯🇵 Japão</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sexo</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="player-sex" value="M"> Masculino</label>
+                            <label><input type="radio" name="player-sex" value="F"> Feminino</label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="create-player-btn" class="btn btn-primary">COMEÇAR JOGO</button>
+                        <button id="cancel-creation-btn" class="btn btn-secondary">VOLTAR</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Principal -->
+            <div id="dashboard" class="dashboard hidden">
+                <div class="dashboard-header">
+                    <div class="player-info">
+                        <h2 id="player-display-name"></h2>
+                        <span id="player-age-display"></span>
+                    </div>
+                    <div class="time-info">
+                        <p id="current-date"></p>
+                        <p id="current-week"></p>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>Status do Lutador</h3>
+                        <div class="stat-row">
+                            <span>OVR:</span>
+                            <span id="stat-ovr">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Potencial:</span>
+                            <span id="stat-potential">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Recorde:</span>
+                            <span id="stat-record">0-0-0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Ranking:</span>
+                            <span id="stat-ranking">N/A</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>Recursos</h3>
+                        <div class="stat-row">
+                            <span>Energia:</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="energy-bar"></div>
+                            </div>
+                        </div>
+                        <div class="stat-row">
+                            <span>Saúde:</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="health-bar"></div>
+                            </div>
+                        </div>
+                        <div class="stat-row">
+                            <span>Fadiga:</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="fatigue-bar"></div>
+                            </div>
+                        </div>
+                        <div class="stat-row">
+                            <span>Dinheiro:</span>
+                            <span id="stat-money">$0</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>Fama & Carreira</h3>
+                        <div class="stat-row">
+                            <span>Fama:</span>
+                            <span id="stat-fame">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Seguidores:</span>
+                            <span id="stat-followers">0</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Carreira:</span>
+                            <span id="stat-career">AMADOR</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="advance-week-btn" class="btn btn-primary">⏭️ AVANÇAR SEMANA</button>
+                </div>
+
+                <nav class="main-nav">
+                    <button class="nav-btn" data-section="dashboard">🏠 INÍCIO</button>
+                    <button class="nav-btn" data-section="career">🥊 CARREIRA</button>
+                    <button class="nav-btn" data-section="world">🌍 MUNDO</button>
+                    <button class="nav-btn" data-section="life">❤️ VIDA</button>
+                    <button class="nav-btn" data-section="dynasty">👑 DINASTIA</button>
+                </nav>
+            </div>
+
+            <!-- Seção de Carreira -->
+            <div id="career-section" class="section hidden">
+                <div class="section-header">
+                    <h2>CARREIRA</h2>
+                    <button class="close-btn" data-close="career">✕</button>
+                </div>
+                <div class="section-content">
+                    <div class="section-menu">
+                        <button class="section-menu-item" data-subsection="profile">Perfil</button>
+                        <button class="section-menu-item" data-subsection="training">Treinamento</button>
+                        <button class="section-menu-item" data-subsection="fights">Lutas</button>
+                        <button class="section-menu-item" data-subsection="opportunities">Oportunidades</button>
+                        <button class="section-menu-item" data-subsection="ranking">Ranking</button>
+                    </div>
+                    <div id="career-content" class="section-detail"></div>
+                </div>
+            </div>
+
+            <!-- Seção de Mundo -->
+            <div id="world-section" class="section hidden">
+                <div class="section-header">
+                    <h2>MUNDO</h2>
+                    <button class="close-btn" data-close="world">✕</button>
+                </div>
+                <div class="section-content">
+                    <div class="section-menu">
+                        <button class="section-menu-item" data-subsection="events">Eventos</button>
+                        <button class="section-menu-item" data-subsection="fighters">Lutadores</button>
+                        <button class="section-menu-item" data-subsection="rankings">Rankings</button>
+                        <button class="section-menu-item" data-subsection="news">Notícias</button>
+                    </div>
+                    <div id="world-content" class="section-detail"></div>
+                </div>
+            </div>
+
+            <!-- Seção de Vida -->
+            <div id="life-section" class="section hidden">
+                <div class="section-header">
+                    <h2>VIDA</h2>
+                    <button class="close-btn" data-close="life">✕</button>
+                </div>
+                <div class="section-content">
+                    <div class="section-menu">
+                        <button class="section-menu-item" data-subsection="finances">Finanças</button>
+                        <button class="section-menu-item" data-subsection="relationships">Relacionamentos</button>
+                        <button class="section-menu-item" data-subsection="home">Casa</button>
+                    </div>
+                    <div id="life-content" class="section-detail"></div>
+                </div>
+            </div>
+
+            <!-- Seção de Dinastia -->
+            <div id="dynasty-section" class="section hidden">
+                <div class="section-header">
+                    <h2>DINASTIA</h2>
+                    <button class="close-btn" data-close="dynasty">✕</button>
+                </div>
+                <div class="section-content">
+                    <div class="section-menu">
+                        <button class="section-menu-item" data-subsection="family">Família</button>
+                        <button class="section-menu-item" data-subsection="legacy">Legado</button>
+                    </div>
+                    <div id="dynasty-content" class="section-detail"></div>
+                </div>
+            </div>
+
+            <!-- Modal de Notificações -->
+            <div id="notification-container" class="notification-container"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="config.js"></script>
+    <script src="rng.js"></script>
+    <script src="time.js"></script>
+    <script src="calendar.js"></script>
+    <script src="save.js"></script>
+    <script src="player.js"></script>
+    <script src="fighters.js"></script>
+    <script src="engine.js"></script>
+    <script src="training.js"></script>
+    <script src="recovery.js"></script>
+    <script src="fights.js"></script>
+    <script src="career.js"></script>
+    <script src="rankings.js"></script>
+    <script src="teams.js"></script>
+    <script src="managers.js"></script>
+    <script src="contracts.js"></script>
+    <script src="promotions.js"></script>
+    <script src="events.js"></script>
+    <script src="economy.js"></script>
+    <script src="media.js"></script>
+    <script src="life.js"></script>
+    <script src="family.js"></script>
+    <script src="dynasty.js"></script>
+    <script src="academy.js"></script>
+    <script src="i18n.js"></script>
+    <script src="ui.js"></script>
+    <script src="bootstrap.js"></script>
+</body>
+</html>
